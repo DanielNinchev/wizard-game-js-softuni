@@ -4,9 +4,17 @@ function gameStateFactory() {
         wizard: {
             x: 100,
             y: 200,
-            speed: 4
+            width: 82,
+            height: 100,
+            speed: 6
         },
         keys: {},
+        bugStats: {
+            nextBugCreation: 0,
+            maxCreationInterval: 1500,
+            width: 50,
+            height: 50
+        }
     };
 
     return function () {

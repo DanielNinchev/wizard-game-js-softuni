@@ -36,22 +36,49 @@
             window.requestAnimationFrame(gameLoop)
         }
 
-        function gameLoop() {
+        function gameLoop(timestamp) {
             //User input
             let { wizard } = state;
             let { wizardElement } = game;
 
-            if (state.keys.KeyW) {
-                wizard.y -= wizard.speed;
+            modifyWizardPosition(state, game);
+
+            if (state.bugStats.nextBugCreation < timestamp) {
+                game.createBug();
+                state.bugStats.nextBugCreation = timestamp + Math.random() * state.bugStats.maxCreationInterval;
             }
 
+            //Spawn bugs
+            game.createBug();
+  
             //Render
             wizardElement.style.top = wizard.y + 'px';
+            wizardElement.style.left = wizard.x + 'px';
 
             if (!state.gameOver) {
                 window.requestAnimationFrame(gameLoop);
             } else {
                 alert('Game over!');
+            }
+        }
+
+        function modifyWizardPosition(state, game) {
+            let wizard = state.wizard;
+
+            if (state.keys.KeyW && wizard.y > 0) {
+                wizard.y -= wizard.speed;
+            }
+
+            if (state.keys.KeyS && wizard.y + wizard.height < game.playScreen.offsetHeight) {
+                wizard.y += wizard.speed;
+            }
+
+            if (state.keys.KeyA && wizard.x > 0) {
+                wizard.x -= wizard.speed;
+            }
+
+            if (state.keys.KeyD && wizard.x + wizard.width < game.playScreen.offsetWidth) {
+                wizard.x += wizard.speed;
             }
         }
 
