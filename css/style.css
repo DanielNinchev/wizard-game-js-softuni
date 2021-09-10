@@ -13,10 +13,22 @@ body{
     margin-top: 100px;
     text-align: center;
     padding: 20px;
-    color: lightgreen;
+    background-color: lightgreen;
     font-weight: bold;
     position: absolute;
     width: 500px;
     left: 50%;
     transform: translate(-50%);
+}
+
+.wizard{
+    position: absolute;
+    background-image: url('/images/wizard.png');
+    background-size: cover;
+    width: 82px;
+    height: 100px;
+}
+
+.hidden{
+    display: none;
 }

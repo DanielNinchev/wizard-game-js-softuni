@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,27 +8,30 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Softuni Wizard Game</title>
 </head>
-<body>
-    <div class = "game-view">
-        <div class="start-screen">Start Game</div>
-        <div class="play-screen"></div>
-    </div>
 
+<body>
+    <div class="game-view">
+        <div class="start-screen">Start Game</div>
+        <div class="play-screen hidden"></div>
+    </div>
+    <script src="gameState.js"></script>
+    <script src="gameFactory.js"></script>
     <script>
         //Current game state
-        let state = {};
+        let getState = gameStateFactory();
+        let state = getState();
 
         //Current game DOM elements
-        let game = {
-            startScreen: document.querySelector('.start-screen')
-        };
+        let game = gameFactory();
 
         game.startScreen.addEventListener('click', gameStart);
 
         function gameStart() {
-            console.log('game started');
+            game.startScreen.classList.add('hidden');
+            game.playScreen.classList.remove('hidden');
         }
 
     </script>
 </body>
+
 </html>
