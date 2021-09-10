@@ -44,10 +44,14 @@
             modifyWizardPosition(state, game);
 
             //Move bugs
-
             Array.from(document.getElementsByClassName('bug'))
                 .forEach(x => {
                     let currentPosition = parseInt(x.style.left);
+
+                    //Check for collisions
+                    if (hasCollision(wizardElement, x)){
+                        state.gameOver = true;
+                    }
 
                     if (currentPosition > 0) {
                         x.style.left = currentPosition - state.bugStats.speed + 'px';
@@ -71,6 +75,13 @@
             } else {
                 alert('Game over!');
             }
+        }
+
+        function hasCollision(firstElement, secondElement) {
+            let firstRect = firstElement.getBoundingClientRect();
+            let secondRect = secondElement.getBoundingClientRect();
+
+            return (!(firstRect.top > secondRect.bottom || firstRect.bottom < secondRect.top || firstRect.right < secondRect.left || firstRect.left > secondRect.right));
         }
 
         function modifyWizardPosition(state, game) {
