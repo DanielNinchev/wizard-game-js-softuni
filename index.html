@@ -44,6 +44,16 @@
 
             modifyWizardPosition(state, game);
 
+            if (state.keys.Space) {
+                wizardElement.style.backgroundImage = "url('/images/wizard-fire.png')";
+                if (state.fireBallStats.nextFireBallCreation < timestamp) {
+                    game.createFireBall();
+                    state.fireBallStats.nextFireBallCreation = timestamp + state.fireBallStats.attackSpeed;
+                }
+            } else {
+                wizardElement.style.backgroundImage = "url('/images/wizard.png')";
+            }
+
             //Move bugs
             Array.from(document.getElementsByClassName('bug'))
                 .forEach(x => {
@@ -60,11 +70,34 @@
                     }
                 });
 
+            //Move fireBalls
+            Array.from(document.getElementsByClassName('fireBall'))
+                .forEach(fireBall => {
+                    let currentPosition = parseInt(fireBall.style.left);
+
+                    if (currentPosition + state.fireBallStats.width < game.playScreen.offsetWidth) {
+                        fireBall.style.left = currentPosition + state.fireBallStats.speed + 'px';
+                    } else {
+                        fireBall.remove();
+                    }
+
+                    Array.from(document.getElementsByClassName('bug'))
+                        .forEach(bug => {
+                            if (hasCollision(fireBall, bug)) {
+                                bug.remove();
+                                fireBall.remove();
+                            }
+                        })
+                });
+
             //Spawn bugs
             if (state.bugStats.nextBugCreation < timestamp) {
                 game.createBug();
                 state.bugStats.nextBugCreation = timestamp + Math.random() * state.bugStats.maxCreationInterval;
             }
+
+            //Increase bug speed
+            state.bugStats.speed += 0.001;
 
             //Render
             wizardElement.style.top = wizard.y + 'px';
@@ -113,6 +146,7 @@
         }
 
         function onKeyDown(e) {
+            e.preventDefault();
             state.keys[e.code] = true;
         }
 

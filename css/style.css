@@ -40,12 +40,18 @@ body{
     height: 100px;
 }
 
-.hidden{
-    display: none;
-}
-
 .bug{
     position: absolute;
     background-image: url('/images/bug.png');
     background-size: cover;
+}
+
+.fireBall{
+    position: absolute;
+    background-image: url('/images/fire-ball.png');
+    background-size: cover;
+}
+
+.hidden{
+    display: none;
 }
