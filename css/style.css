@@ -58,6 +58,48 @@ body{
     background-size: cover;
 }
 
+.fireSpeed{
+    position: absolute;
+    background-image: url('/images/fire-speed.png');
+    background-size: cover;
+}
+
+.fireAmmo{
+    position: absolute;
+    background-image: url('/images/fire-ammo.png');
+    background-size: cover;
+}
+
+.firePower{
+    position: absolute;
+    background-image: url('/images/fire-power.png');
+    background-size: cover;
+}
+
+.speedBonus{
+    position: absolute;
+    background-image: url('/images/speed.png');
+    background-size: cover;
+}
+
+.death{
+    position: absolute;
+    background-image: url('/images/death.png');
+    background-size: cover;
+}
+
+.day{
+    position: absolute;
+    background-image: url('/images/day.png');
+    background-size: cover;
+}
+
+.night{
+    position: absolute;
+    background-image: url('/images/night.png');
+    background-size: cover;
+}
+
 .hidden{
     display: none;
 }

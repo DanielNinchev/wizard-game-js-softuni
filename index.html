@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div class="game-view">
+    <div class="game-view" , id='gameView'>
         <div class="start-screen">Start Game</div>
         <div class="score-screen">Score: 0, Lives: 1</div>
         <div class="play-screen hidden"></div>
@@ -41,14 +41,16 @@
             //User input
             let { wizard } = state;
             let { wizardElement, scoreScreen } = game;
+            let gameView = document.getElementById('gameView');
 
             modifyWizardPosition(state, game);
 
             if (state.keys.Space) {
                 wizardElement.style.backgroundImage = "url('/images/wizard-fire.png')";
-                if (state.fireBallStats.nextFireBallCreation < timestamp) {
+                if (state.fireBallStats.nextFireBallCreation < timestamp && state.ammo > 0) {
                     game.createFireBall();
-                    state.fireBallStats.nextFireBallCreation = timestamp + state.fireBallStats.attackSpeed;
+                    state.fireBallStats.nextFireBallCreation = timestamp + state.fireBallStats.attackInterval;
+                    state.ammo--;
                 }
             } else {
                 wizardElement.style.backgroundImage = "url('/images/wizard.png')";
@@ -57,38 +59,100 @@
             //Move bugs
             Array.from(document.getElementsByClassName('bug'))
                 .forEach(x => {
-                    let currentPosition = parseInt(x.style.left);
-
-                    if (currentPosition > 0) {
-                        x.style.left = currentPosition - state.bugStats.speed + 'px';
-                    } else {
-                        x.remove();
-                    }
+                    checkElementPosition(x, state.bugStats.speed);
 
                     if (hasCollision(wizardElement, x)) {
-                        if (state.lives <= 0) {
-                            state.gameOver = true;
-                        } else {
-                            state.lives--;
-                            x.remove();
-                        }
+                        loseLife(x);
                     }
                 });
 
             //Move life bonuses
             Array.from(document.getElementsByClassName('life'))
                 .forEach(x => {
-                    let currentPosition = parseInt(x.style.left);
-
-                    if (currentPosition > 0) {
-                        x.style.left = currentPosition - state.lifeStats.speed + 'px';
-                    } else {
-                        x.remove();
-                    }
+                    checkElementPosition(x, state.lifeStats.speed);
 
                     if (hasCollision(wizardElement, x)) {
                         state.lives++;
                         x.remove();
+                    }
+                });
+
+            //Move fire ammo bonuses
+            Array.from(document.getElementsByClassName('fireAmmo'))
+                .forEach(x => {
+                    checkElementPosition(x, state.fireAmmoStats.speed);
+
+                    if (hasCollision(wizardElement, x)) {
+                        state.ammo += 50;
+                        x.remove();
+                    }
+                });
+
+            //Move fire power bonuses
+            Array.from(document.getElementsByClassName('firePower'))
+                .forEach(x => {
+                    checkElementPosition(x, state.firePowerStats.speed);
+
+                    if (hasCollision(wizardElement, x)) {
+                        state.damage += 10; 
+                        x.remove();
+                    }
+                });
+
+            //Move fire speed bonuses
+            Array.from(document.getElementsByClassName('fireSpeed'))
+                .forEach(x => {
+                    checkElementPosition(x, state.fireSpeedStats.speed);
+
+                    if (hasCollision(wizardElement, x)) {
+                        if (wizard.attackInterval > 100) {
+                            wizard.attackInterval -= 100;
+                        }
+
+                        x.remove();
+                    }
+                });
+
+            //Move speed bonuses
+            Array.from(document.getElementsByClassName('speedBonus'))
+                .forEach(x => {
+                    checkElementPosition(x, state.speedBonusStats.speed);
+
+                    if (hasCollision(wizardElement, x)) {
+                        wizard.speed += 2;
+                        x.remove();
+                    }
+                });
+
+            //Move days
+            Array.from(document.getElementsByClassName('day'))
+                .forEach(x => {
+                    checkElementPosition(x, state.dayStats.speed);
+
+                    if (hasCollision(wizardElement, x)) {
+                        gameView.style.backgroundColor = "skyblue";
+                        x.remove();
+                    }
+                });
+
+            //Move nights
+            Array.from(document.getElementsByClassName('night'))
+                .forEach(x => {
+                    checkElementPosition(x, state.nightStats.speed);
+
+                    if (hasCollision(wizardElement, x)) {
+                        gameView.style.backgroundColor = "darkslateblue";
+                        x.remove();
+                    }
+                });
+
+            //Move deaths
+            Array.from(document.getElementsByClassName('death'))
+                .forEach(x => {
+                    checkElementPosition(x, state.deathStats.speed);
+
+                    if (hasCollision(wizardElement, x)) {
+                        loseLife(x);
                     }
                 });
 
@@ -120,9 +184,51 @@
             }
 
             //Spawn life bonuses
-            if (state.lifeStats.nextLifeBonusCreation < timestamp) {
+            if (state.lifeStats.nextCreation < timestamp) {
                 game.createLifeBonus();
-                state.lifeStats.nextLifeBonusCreation = timestamp + Math.random() * (state.lifeStats.maxInterval - state.lifeStats.minInterval) + state.lifeStats.minInterval;
+                state.lifeStats.nextCreation = timestamp + Math.random() * (state.lifeStats.maxInterval - state.lifeStats.minInterval) + state.lifeStats.minInterval;
+            }
+
+            //Spawn speed bonuses
+            if (state.speedBonusStats.nextCreation < timestamp) {
+                game.createSpeedBonus();
+                state.speedBonusStats.nextCreation = timestamp + Math.random() * (state.speedBonusStats.maxInterval - state.speedBonusStats.minInterval) + state.speedBonusStats.minInterval;
+            }
+
+            //Spawn fire power bonuses
+            if (state.firePowerStats.nextCreation < timestamp) {
+                game.createFirePowerBonus();
+                state.firePowerStats.nextCreation = timestamp + Math.random() * (state.firePowerStats.maxInterval - state.firePowerStats.minInterval) + state.firePowerStats.minInterval;
+            }
+
+            //Spawn fire ammo bonuses
+            if (state.fireAmmoStats.nextCreation < timestamp) {
+                game.createFireAmmoBonus();
+                state.fireAmmoStats.nextCreation = timestamp + Math.random() * (state.fireAmmoStats.maxInterval - state.fireAmmoStats.minInterval) + state.fireAmmoStats.minInterval;
+            }
+
+            //Spawn fire speed bonuses
+            if (state.fireSpeedStats.nextCreation < timestamp) {
+                game.createFireSpeedBonus();
+                state.fireSpeedStats.nextCreation = timestamp + Math.random() * (state.fireSpeedStats.maxInterval - state.fireSpeedStats.minInterval) + state.fireSpeedStats.minInterval;
+            }
+
+            //Spawn day elements
+            if (state.dayStats.nextCreation < timestamp) {
+                game.createDayBonus();
+                state.dayStats.nextCreation = timestamp + Math.random() * (state.dayStats.maxInterval - state.dayStats.minInterval) + state.dayStats.minInterval;
+            }
+
+            //Spawn night elements
+            if (state.nightStats.nextCreation < timestamp) {
+                game.createNightBonus();
+                state.nightStats.nextCreation = timestamp + Math.random() * (state.nightStats.maxInterval - state.nightStats.minInterval) + state.nightStats.minInterval;
+            }
+
+            //Spawn death elements
+            if (state.deathStats.nextCreation < timestamp) {
+                game.createDeathElement();
+                state.deathStats.nextCreation = timestamp + Math.random() * (state.deathStats.maxInterval - state.deathStats.minInterval) + state.deathStats.minInterval;
             }
 
             //Increase bug speed
@@ -131,7 +237,7 @@
             //Render
             wizardElement.style.top = wizard.y + 'px';
             wizardElement.style.left = wizard.x + 'px';
-            scoreScreen.textContent = `Score: ${state.score}pts;  Lives: ${state.lives};`;
+            scoreScreen.textContent = `Score: ${state.score}pts;  Lives: ${state.lives};  Speed: ${state.wizard.speed};  Damage: ${state.damage};  Fire Balls: ${state.ammo};`;
 
             if (!state.gameOver) {
                 state.score += 1;
@@ -181,6 +287,25 @@
 
         function onKeyUp(e) {
             state.keys[e.code] = false;
+        }
+
+        function checkElementPosition(element, speed) {
+            let currentPosition = parseInt(element.style.left);
+
+            if (currentPosition > 0) {
+                element.style.left = currentPosition - speed + 'px';
+            } else {
+                element.remove();
+            }
+        }
+
+        function loseLife(element) {
+            if (state.lives <= 0) {
+                state.gameOver = true;
+            } else {
+                state.lives--;
+                element.remove();
+            }
         }
 
     </script>
