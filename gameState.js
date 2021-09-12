@@ -16,7 +16,8 @@ function gameStateFactory() {
             maxCreationInterval: 1500,
             speed: 3,
             width: 50,
-            height: 50
+            height: 50,
+            score: 500
         },
         fireBallStats: {
             height: 40,

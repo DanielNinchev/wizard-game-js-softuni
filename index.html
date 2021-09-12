@@ -86,6 +86,7 @@
                             if (hasCollision(fireBall, bug)) {
                                 bug.remove();
                                 fireBall.remove();
+                                state.score += state.bugStats.score;
                             }
                         })
                 });
