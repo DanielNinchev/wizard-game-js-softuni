@@ -40,6 +40,12 @@ body{
     height: 100px;
 }
 
+.life{
+    position: absolute;
+    background-image: url('/images/heart.png');
+    background-size: cover;
+}
+
 .bug{
     position: absolute;
     background-image: url('/images/bug.png');

@@ -1,7 +1,7 @@
 function gameFactory() {
     let getState = gameStateFactory();
 
-    let { wizard, bugStats, fireBallStats } = getState();
+    let { wizard, bugStats, fireBallStats, lifeStats } = getState();
 
     let startScreen = document.querySelector('.start-screen');
     let scoreScreen = document.querySelector('.score-screen');
@@ -39,6 +39,17 @@ function gameFactory() {
             fireBallElement.style.top = wizardElement.style.top;
 
             playScreen.appendChild(fireBallElement);
+        },
+        createLifeBonus: () => {
+            let lifeBonusElement = document.createElement('div');
+
+            lifeBonusElement.classList.add('life');
+            lifeBonusElement.style.width = lifeStats.width + 'px';
+            lifeBonusElement.style.height = lifeStats.height + 'px';
+            lifeBonusElement.style.left = playScreen.offsetWidth - lifeStats.width + 'px';
+            lifeBonusElement.style.top = (playScreen.offsetHeight - lifeStats.height) * Math.random() + 'px';
+
+            playScreen.appendChild(lifeBonusElement);
         }
     };
 

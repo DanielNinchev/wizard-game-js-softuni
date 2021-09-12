@@ -1,6 +1,7 @@
 function gameStateFactory() {
     let state = {
         gameOver: false,
+        lives: 1,
         score: 0,
         wizard: {
             x: 100,
@@ -25,6 +26,14 @@ function gameStateFactory() {
             speed: 10,
             nextFireBallCreation: 0,
             attackSpeed: 400,
+        },
+        lifeStats: {
+            height: 50,
+            width: 50,
+            speed: 7,
+            nextLifeBonusCreation: 0,
+            maxInterval: 50000,
+            minInterval: 20000,
         }
     };
 
